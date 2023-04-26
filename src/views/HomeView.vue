@@ -1,18 +1,46 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div>
+    <section class="gallery">
+      <ProductGallery />
+    </section>
+    <section class="cart">
+      <CartProduct />
+    </section>
+
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import ProductGallery from "@/components/ProductGallery.vue";
+import CartProduct from "@/components/CartProduct.vue";
 
-export default defineComponent({
-  name: "HomeView",
+export default {
+  name: "AppProduct",
   components: {
-    HelloWorld,
+    ProductGallery,
+    CartProduct,
   },
-});
+  data() {
+    return {
+
+    };
+  },
+};
 </script>
+<style scoped>
+.cart {
+  width: 30%;
+  float: left;
+  background-color: gainsboro;
+}
+
+.gallery {
+  width: 70%;
+  float: left;
+  background-color: gainsboro;
+}
+
+.main {
+  display: flex;
+}
+</style>
