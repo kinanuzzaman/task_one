@@ -23,7 +23,7 @@
         </svg>
       </div>
     </section>
-    <div class="flex justify-between p-2" v-for="item in cartStore.inCart" :key="item">
+    <div class="flex justify-between p-2" v-for="item in  cartStore.inCart " :key="item.id">
       <div class="mt-5 sm:mt-0">
         <h2 class=" text-gray-900">{{ item.name }}</h2>
       </div>
@@ -34,12 +34,12 @@
         <p class="h-8 w-8 border bg-white text-center outline-none">{{ item.addedQty }}</p>
 
         <button class="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
-          @click="addProduct(item)">+</button>
+          @click="cartStore.increment(item);">+</button>
       </div>
       <div class="flex items-center gap-3">
         <p class="text-sm">${{ item.price }}</p>
         <button class="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
-          @click="cartStore.removeFromCart(item)">X</button>
+          @click=" cartStore.removeFromCart(item) ">X</button>
         <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="h-5 w-5 cursor-pointer duration-150 hover:text-red-500">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -82,15 +82,8 @@ export default defineComponent({
   setup() {
     const cartStore = useCartStore();
     const count = ref(0);
-    const addProduct = (item: any) => {
-      if (item.addedQty == item.stock) {
-        alert('Out of Stock')
-        return;
-      }
-      cartStore.increment(item);
-    }
+
     return {
-      addProduct,
       cartStore,
       count,
     }

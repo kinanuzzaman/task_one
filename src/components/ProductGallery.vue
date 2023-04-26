@@ -86,15 +86,14 @@ export default defineComponent({
     setup() {
         const cartStore = useCartStore();
         const addToCart = (product: any) => {
+            console.log(product);
             if (product.stock > 0) {
-                if (product.addedQty == product.stock) {
-                    alert('Out of Stock')
-                    return;
-                }
                 cartStore.increment(product);
             }
         }
+
         return {
+            cartStore,
             addToCart,
         }
     }

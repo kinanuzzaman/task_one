@@ -1,14 +1,21 @@
 import { defineStore } from "pinia";
 import { useLocalStorage, StorageSerializers } from "@vueuse/core";
-
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  stock: number;
+  addedQty: number;
+}
+interface State {
+  inCart: Product[];
+  cartPrice: number;
+}
 export const useCartStore = defineStore("cart", {
-  state: () => ({
-    inCart: useLocalStorage("inCart", [], {
-      serializer: StorageSerializers.object,
-    }),
-    cartPrice: useLocalStorage("cartPrice", 0.0, {
-      serializer: StorageSerializers.number,
-    }),
+  state: (): State => ({
+    inCart: [],
+    cartPrice: 0,
   }),
   getters: {
     getCartItems: (state) => {
@@ -26,14 +33,17 @@ export const useCartStore = defineStore("cart", {
       const alreadyInCart = this.inCart.find(
         (cartItem: any) => cartItem.id === product.id
       );
-      //   if (alreadyInCart && alreadyInCart.addedQty == product.stock) {
-      //     return;
-      //   }
+
       if (alreadyInCart) {
+        if (alreadyInCart.stock == 0) {
+          return;
+        }
         alreadyInCart.addedQty++;
+        product.stock--;
       } else {
         product.addedQty = 1;
         this.inCart.push(product);
+        product.stock--;
       }
       this.cartPrice += product.price;
       console.log(
@@ -50,11 +60,16 @@ export const useCartStore = defineStore("cart", {
 
       if (this.inCart[alreadyInCart].addedQty > 1) {
         this.inCart[alreadyInCart].addedQty--;
+        this.inCart[alreadyInCart].stock++;
       } else {
+        this.inCart[alreadyInCart].stock++;
         this.inCart.splice(alreadyInCart, 1);
       }
 
       this.cartPrice -= product.price;
+      if (this.cartPrice < 0) {
+        this.cartPrice = 0;
+      }
       // console.log("🚀 ~ file: cart.store.js:232 ~ increment ~ this.inCart", this.inCart)
     },
     clearCart() {
@@ -65,7 +80,11 @@ export const useCartStore = defineStore("cart", {
       const alreadyInCart = this.inCart.findIndex(
         (cartItem: any) => cartItem.id === product.id
       );
-      this.cartPrice -= product.price * product.addedQty;
+      const sum: number = parseInt(product.price) * parseInt(product.addedQty);
+      this.cartPrice -= sum;
+      if (this.cartPrice < 0) {
+        this.cartPrice = 0;
+      }
       this.inCart.splice(alreadyInCart, 1);
     },
   },
