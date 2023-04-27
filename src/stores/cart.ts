@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useLocalStorage, StorageSerializers } from "@vueuse/core";
+
 interface Product {
   id: number;
   name: string;
